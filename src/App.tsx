@@ -1,8 +1,20 @@
+import React from "react";
+import { Button } from "./components/ui/Button";
+import { Container } from "react-bootstrap";
+
 function App() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-200">
-      <h1 className="text-4xl font-bold text-blue-500">Hello, Tailwind Works! 🚀</h1>
-    </div>
+    <Container className="text-center mt-5">
+      <h1 className="text-primary">Hello, Bootstrap Works! 🚀</h1>
+      <Button
+        variant="primary"
+        size="md"
+        text="Click Me"
+        start={<span>🚀</span>}
+        end={<span>+</span>}
+        onClick={() => console.log("Button Clicked")}
+      />
+    </Container>
   );
 }
 
