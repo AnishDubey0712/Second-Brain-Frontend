@@ -1,4 +1,5 @@
 import React from "react";
+import { Button as BootstrapButton } from "react-bootstrap";
 
 export interface ButtonProps {
   variant: "primary" | "secondary" | "danger" | "success";
@@ -9,29 +10,24 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-const variantClasses: Record<ButtonProps["variant"], string> = {
-  primary: "bg-blue-500 hover:bg-blue-600 text-white",
-  secondary: "bg-gray-500 hover:bg-gray-600 text-white",
-  danger: "bg-red-500 hover:bg-red-600 text-white",
-  success: "bg-green-500 hover:bg-green-600 text-white",
+const bootstrapVariantMap: Record<ButtonProps["variant"], string> = {
+  primary: "primary",
+  secondary: "secondary",
+  danger: "danger",
+  success: "success",
 };
 
-const sizeClasses: Record<ButtonProps["size"], string> = {
-  sm: "px-2 py-1 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+const bootstrapSizeMap: Record<ButtonProps["size"], "sm" | "lg"> = {
+  sm: "sm",
+  md: "lg",
+  lg: "lg",
 };
 
 export const Button: React.FC<ButtonProps> = ({ variant, size, text, start, end, onClick }) => {
   return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 rounded transition duration-200 ${variantClasses[variant]} ${sizeClasses[size]}`}
-    >
-      {start}
-      {text}
-      {end}
-    </button>
+    <BootstrapButton variant={bootstrapVariantMap[variant]} size={bootstrapSizeMap[size]} onClick={onClick}>
+      {start} {text} {end}
+    </BootstrapButton>
   );
 };
 
