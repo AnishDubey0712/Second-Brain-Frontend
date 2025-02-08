@@ -8,27 +8,32 @@ export interface ButtonProps {
   start?: React.ReactNode;
   end?: React.ReactNode;
   onClick: () => void;
+  defaultStyle?: string;
 }
 
-const bootstrapVariantMap: Record<ButtonProps["variant"], string> = {
+const bootstrapVariantMap = {
   primary: "primary",
   secondary: "secondary",
   danger: "danger",
   success: "success",
 };
-const defaultStyles = "rounded-md p-4"
-let firstName = "John";
-let lastName = "Doe";
-let fullName = `${firstName} ${lastName}`;  
-const bootstrapSizeMap: Record<ButtonProps["size"], "sm" | "lg"> = {
+
+const bootstrapSizeMap = {
   sm: "sm",
-  md: "lg",
+  md: "lg", // No exact 'md' size in react-bootstrap, using 'lg' here
   lg: "lg",
 };
 
-export const Button: React.FC<ButtonProps> = ({ variant, size, text, start, end, onClick }) => {
+const defaultStyles = "rounded-md p-4"; // default padding and rounded styles
+
+const Button = ({ variant, size, text, start, end, onClick }: ButtonProps) => {
   return (
-    <BootstrapButton variant={bootstrapVariantMap[variant]} size={bootstrapSizeMap[size]} onClick={onClick}>
+    <BootstrapButton
+      variant={bootstrapVariantMap[variant]}
+      size={bootstrapSizeMap[size]}
+      onClick={onClick}
+      className={defaultStyles}
+    >
       {start} {text} {end}
     </BootstrapButton>
   );
