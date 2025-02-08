@@ -16,7 +16,7 @@ const bootstrapVariantMap: Record<ButtonProps["variant"], string> = {
   danger: "danger",
   success: "success",
 };
-
+const defaultStyles = "rounded-md p-4"
 const bootstrapSizeMap: Record<ButtonProps["size"], "sm" | "lg"> = {
   sm: "sm",
   md: "lg",
