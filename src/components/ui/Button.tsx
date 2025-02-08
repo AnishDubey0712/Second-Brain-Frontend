@@ -1,41 +1,35 @@
 import React from "react";
-import { Button as BootstrapButton } from "react-bootstrap";
 
 export interface ButtonProps {
   variant: "primary" | "secondary" | "danger" | "success";
-  size: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg"; // Optional size, defaults to medium if not specified
   text: string;
   start?: React.ReactNode;
   end?: React.ReactNode;
   onClick: () => void;
-  defaultStyle?: string;
 }
 
-const bootstrapVariantMap = {
-  primary: "primary",
-  secondary: "secondary",
-  danger: "danger",
-  success: "success",
-};
+const Button: React.FC<ButtonProps> = ({
+  variant,
+  size = "md", // default size is "md"
+  text,
+  start,
+  end,
+  onClick,
+}) => {
+  // Define Bootstrap size classes
+  const sizeClass = size === "sm" ? "btn-sm" : size === "lg" ? "btn-lg" : "";
 
-const bootstrapSizeMap = {
-  sm: "sm",
-  md: "lg", // No exact 'md' size in react-bootstrap, using 'lg' here
-  lg: "lg",
-};
+  // Define Bootstrap variant classes
+  const variantClass = `btn-${variant}`;
 
-const defaultStyles = "rounded-md p-4"; // default padding and rounded styles
-
-const Button = ({ variant, size, text, start, end, onClick }: ButtonProps) => {
   return (
-    <BootstrapButton
-      variant={bootstrapVariantMap[variant]}
-      size={bootstrapSizeMap[size]}
+    <button
+      className={`btn ${variantClass} ${sizeClass}`}
       onClick={onClick}
-      className={defaultStyles}
     >
       {start} {text} {end}
-    </BootstrapButton>
+    </button>
   );
 };
 

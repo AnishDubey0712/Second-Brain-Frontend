@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./components/ui/Button";
+import  Button  from "./components/ui/Button";
 import { Container } from "react-bootstrap";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
       <h1 className="text-primary">Hello, Bootstrap Works! 🚀</h1>
       <Button
         variant="primary"
-        size="md"
+        size="sm"  // Small button
         text="Click Me"
         start={<span>🚀</span>}
         end={<span>+</span>}
