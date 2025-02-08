@@ -17,6 +17,9 @@ const bootstrapVariantMap: Record<ButtonProps["variant"], string> = {
   success: "success",
 };
 const defaultStyles = "rounded-md p-4"
+let firstName = "John";
+let lastName = "Doe";
+let fullName = `${firstName} ${lastName}`;  
 const bootstrapSizeMap: Record<ButtonProps["size"], "sm" | "lg"> = {
   sm: "sm",
   md: "lg",
