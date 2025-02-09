@@ -1,28 +1,24 @@
 import React from "react";
-import  Button  from "./components/ui/Button";
 import { Container } from "react-bootstrap";
+import Button from "./components/ui/Button";
 
 function App() {
   return (
     <Container className="text-center mt-5">
-      <h1 className="text-primary">Hello, Bootstrap Works! 🚀</h1>
-
       {/* Share Brain Button */}
       <Button
-        variant="primary"
+        variant="share"
         size="md"
         text="Share Brain"
-        icon="bi-share" // Bootstrap "Share" Icon
-        onClick={() => console.log("Share Brain Clicked")}
+        onClick={() => console.log("Share Clicked")}
       />
-
       {/* Add Content Button */}
       <Button
-        variant="success"
+        variant="add"
         size="md"
         text="Add Content"
-        icon="bi-plus-lg" // Bootstrap "Plus" Icon
-        onClick={() => console.log("Add Content Clicked")}
+        onClick={() => console.log("Add Clicked")}
+        className="ms-3"
       />
     </Container>
   );
