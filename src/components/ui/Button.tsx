@@ -1,34 +1,35 @@
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap Icons
 
 export interface ButtonProps {
   variant: "primary" | "secondary" | "danger" | "success";
-  size?: "sm" | "md" | "lg"; // Optional size, defaults to medium if not specified
+  size?: "sm" | "md" | "lg"; // Optional size, defaults to "md"
   text: string;
-  start?: React.ReactNode;
-  end?: React.ReactNode;
+  icon?: string; // Icon class from Bootstrap Icons
   onClick: () => void;
 }
 
+// Define Bootstrap size classes (for padding)
+const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "p-1",
+  md: "p-2",
+  lg: "p-3",
+};
+
 const Button: React.FC<ButtonProps> = ({
   variant,
-  size = "md", // default size is "md"
+  size = "md",
   text,
-  start,
-  end,
+  icon,
   onClick,
 }) => {
-  // Define Bootstrap size classes
   const sizeClass = size === "sm" ? "btn-sm" : size === "lg" ? "btn-lg" : "";
 
-  // Define Bootstrap variant classes
-  const variantClass = `btn-${variant}`;
-
   return (
-    <button
-      className={`btn ${variantClass} ${sizeClass}`}
-      onClick={onClick}
-    >
-      {start} {text} {end}
+    <button className={`btn btn-${variant} ${sizeClass} ${sizeStyles[size]}`} onClick={onClick}>
+      {icon && <i className={`bi ${icon} me-2`}></i>} {/* Bootstrap Icon */}
+      {text}
     </button>
   );
 };
