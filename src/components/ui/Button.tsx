@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = ({
   // Define Bootstrap size classes
   const sizeClass = size === "sm" ? "btn-sm" : size === "lg" ? "btn-lg" : "btn-md"; // Default to btn-md
 
-  // Define custom button colors based on variant
+  // Define custom button colors based on variant.
   const buttonStyle =
     variant === "share"
       ? "btn" // For Share, use custom color
@@ -33,8 +33,8 @@ const Button: React.FC<ButtonProps> = ({
 
   const customStyles = {
     share: {
-      backgroundColor: "#CCCCFF", // Light Blue for Share Button
-      color: "#000", // Text color (black)
+      backgroundColor: "#FF5733", // Light Blue for Share Button
+      color: "#fff", // Text color (black)
       fontFamily: "'Poppins', sans-serif", // Poppins font
     },
     add: {
