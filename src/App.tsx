@@ -12,23 +12,30 @@ function App() {
       <Sidebar onCategorySelect={setSelectedCategory} />
 
       {/* Main Content (Right) */}
-      <Container className="p-4 text-center">
-        <h2 className="mb-4">All Notes</h2>
-
-        {/* Share & Add Content Buttons */}
-        <Button
-          variant="share"
-          size="md"
-          text="Share Brain"
-          onClick={() => console.log("Share Clicked")}
-          className="me-3"
-        />
-        <Button
-          variant="add"
-          size="md"
-          text="Add Content"
-          onClick={() => console.log("Add Clicked")}
-        />
+      <Container className="p-4">
+        {/* Top Bar */}
+        <Row className="align-items-center mb-4">
+          <Col>
+            {/* "All Notes" on the Left */}
+            <h2 className="m-0 all-notes-title">All Notes</h2>
+          </Col>
+          <Col className="text-end">
+            {/* Buttons on the Right */}
+            <Button
+              variant="share"
+              size="md"
+              text="Share Brain"
+              onClick={() => console.log("Share Clicked")}
+              className="me-3"
+            />
+            <Button
+              variant="add"
+              size="md"
+              text="Add Content"
+              onClick={() => console.log("Add Clicked")}
+            />
+          </Col>
+        </Row>
 
         {/* Category Selection Feedback */}
         {selectedCategory && (
