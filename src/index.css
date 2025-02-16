@@ -1,18 +1,42 @@
 .sidebar-item {
     width: 100%;
     text-align: left;
-    padding: 10px;
-    font-size: 16px;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     border: none;
     background: none;
-    color: black;
+    color: white;
     cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  .sidebar-items {
+    font-family: 'Montserrat', sans-serif; /* Elegant Bold Font */
+  /* letter-spacing: 1.5px; Slight spacing for premium feel */
+    width: 100%;
+    text-align: left;
+    padding: 14px;
+    font-size: 25px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  .sidebar-item:hover {
+    background-color: #4a2db5; /* Slightly Darker Purple */
+    border-radius: 6px;
   }
   
-  .sidebar-item:hover {
-    background-color: #B3A2C7; /* Slightly darker lavender */
+  .sidebar-item:focus {
+    outline: none;
+    background-color: #3d2499;
   }
   
