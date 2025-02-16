@@ -13,7 +13,7 @@ function App() {
 
       {/* Main Content (Right) */}
       <Container className="p-4 text-center">
-        <h2 className="mb-4">Second Brain</h2>
+        <h2 className="mb-4">All Notes</h2>
 
         {/* Share & Add Content Buttons */}
         <Button
