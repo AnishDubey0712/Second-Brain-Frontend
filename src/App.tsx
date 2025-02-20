@@ -78,14 +78,13 @@ const App = () => {
   };
 
   // ✅ Handle Add Content
-  const handleAddContent = async (title: string, link: string, type: string) => {
+  const handleAddContent = async (title: string, link: string, type: string, tags: string[]) => {
     if (!token) {
       alert("Please sign in first.");
       return;
     }
   
-    console.log("Adding Content:", { title, link, type });
-    console.log("Token being sent:", token);
+    console.log("Adding Content:", { title, link, type, tags });
   
     try {
       const response = await fetch("http://localhost:3000/api/v1/content", {
@@ -94,7 +93,7 @@ const App = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ title, link, type }),
+        body: JSON.stringify({ title, link, type, tags }), // ✅ Sending tags
       });
   
       const data = await response.json();
@@ -102,9 +101,7 @@ const App = () => {
       if (response.ok) {
         alert("Content added successfully!");
         setShowAddContentModal(false);
-        
-        // ✅ Refresh content list
-        fetchContent(selectedCategory || "tweets");
+        fetchContent(selectedCategory || "tweets"); // Refresh content
       } else {
         alert("Error: " + data.message);
       }
