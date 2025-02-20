@@ -7,38 +7,31 @@ import AuthModal from "./components/ui/AuthModal";
 import AddContentModal from "./components/ui/AddContentModal";
 
 const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>("tweets"); // Default category
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAddContentModal, setShowAddContentModal] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [content, setContent] = useState([]);
 
-  // ✅ Fetch content when user signs in or selects a category
+  // ✅ Fetch content when category changes OR when user logs in
   useEffect(() => {
-    if (token) {
-      fetchContent(selectedCategory || "tweets");
+    if (token && selectedCategory) {
+      fetchContent(selectedCategory);
     }
-  }, [token, selectedCategory]);
+  }, [selectedCategory, token]);
 
-  // ✅ Fetch User Content from Backend
+  // ✅ Fetch Content from Backend
   const fetchContent = async (type: string) => {
-    if (!token) return;
-
-    console.log("Fetching content for:", type);
-    
     try {
       const response = await fetch(`http://localhost:3000/api/v1/content?type=${type}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
         const data = await response.json();
         setContent(data);
       } else {
-        console.error("Error fetching content:", await response.text());
         setContent([]);
       }
     } catch (error) {
@@ -46,7 +39,7 @@ const App = () => {
     }
   };
 
-  // ✅ Handle User Sign In / Sign Up
+  // ✅ Handle Sign In / Sign Up
   const handleAuth = async (username: string, password: string) => {
     try {
       const endpoint = authMode === "signin" ? "signin" : "signup";
@@ -57,16 +50,12 @@ const App = () => {
       });
 
       const data = await response.json();
-      
       if (response.ok) {
         alert(authMode === "signin" ? "Sign In Successful" : "Sign Up Successful");
-        
         if (authMode === "signin") {
           localStorage.setItem("token", data.token);
           setToken(data.token);
-          
-          // ✅ Fetch content immediately after login
-          fetchContent(selectedCategory || "tweets");
+          fetchContent(selectedCategory || "tweets"); // ✅ Fetch user content after login
         }
         setShowAuthModal(false);
       } else {
@@ -77,15 +66,13 @@ const App = () => {
     }
   };
 
-  // ✅ Handle Add Content
+  // ✅ Handle Add Content (With Tags)
   const handleAddContent = async (title: string, link: string, type: string, tags: string[]) => {
     if (!token) {
       alert("Please sign in first.");
       return;
     }
-  
-    console.log("Adding Content:", { title, link, type, tags });
-  
+
     try {
       const response = await fetch("http://localhost:3000/api/v1/content", {
         method: "POST",
@@ -93,21 +80,80 @@ const App = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ title, link, type, tags }), // ✅ Sending tags
+        body: JSON.stringify({ title, link, type, tags }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         alert("Content added successfully!");
         setShowAddContentModal(false);
-        fetchContent(selectedCategory || "tweets"); // Refresh content
+        fetchContent(selectedCategory || "tweets");
       } else {
         alert("Error: " + data.message);
       }
     } catch (error) {
       console.error("Error adding content:", error);
       alert("Failed to add content.");
+    }
+  };
+
+  // ✅ Handle Share Content (Generate Share Link)
+  const handleShareContent = async (id: string) => {
+    if (!token) {
+      alert("Please sign in first.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/brain/share", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ share: true, contentId: id }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Share Link: http://localhost:3000/api/v1/brain/${data.hash}`);
+      } else {
+        alert("Error: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error sharing content:", error);
+      alert("Failed to generate share link.");
+    }
+  };
+
+  // ✅ Handle Delete Content
+  const handleDeleteContent = async (id: string) => {
+    if (!token) {
+      alert("Please sign in first.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/content", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ contentId: id }),
+      });
+
+      if (response.ok) {
+        alert("Content deleted successfully!");
+        fetchContent(selectedCategory || "tweets"); // Refresh content
+      } else {
+        alert("Failed to delete content.");
+      }
+    } catch (error) {
+      console.error("Error deleting content:", error);
+      alert("Error deleting content.");
     }
   };
 
@@ -147,15 +193,19 @@ const App = () => {
 
         {/* Display Content as Cards */}
         <Row>
-          {content.length > 0 ? (
-            content.map((item, index) => (
-              <Col key={index} md={4} className="mb-4">
-                <ContentCard title={item.title} link={item.link} />
-              </Col>
-            ))
-          ) : (
-            <p className="text-center">No content available. Add some content!</p>
-          )}
+          {content.map((item) => (
+            <Col key={item._id} md={4} className="mb-4">
+              <ContentCard
+                id={item._id}
+                title={item.title}
+                link={item.link}
+                type={item.type}
+                tags={item.tags}
+                onShare={handleShareContent}
+                onDelete={handleDeleteContent}
+              />
+            </Col>
+          ))}
         </Row>
       </Container>
 
