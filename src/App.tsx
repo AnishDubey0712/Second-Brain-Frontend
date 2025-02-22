@@ -14,7 +14,7 @@ const App = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [content, setContent] = useState([]);
 
-  // ✅ Fetch content when category changes OR when user logs in
+  // Fetch content when category changes
   useEffect(() => {
     if (token && selectedCategory) {
       fetchContent(selectedCategory);
@@ -55,7 +55,7 @@ const App = () => {
         if (authMode === "signin") {
           localStorage.setItem("token", data.token);
           setToken(data.token);
-          fetchContent(selectedCategory || "tweets"); // ✅ Fetch user content after login
+          if (selectedCategory) fetchContent(selectedCategory);
         }
         setShowAuthModal(false);
       } else {
@@ -66,7 +66,7 @@ const App = () => {
     }
   };
 
-  // ✅ Handle Add Content (With Tags)
+  // ✅ Handle Add Content
   const handleAddContent = async (title: string, link: string, type: string, tags: string[]) => {
     if (!token) {
       alert("Please sign in first.");
@@ -98,42 +98,21 @@ const App = () => {
     }
   };
 
-  // ✅ Handle Share Content (Generate Share Link)
-  const handleShareContent = async (id: string) => {
-    if (!token) {
-      alert("Please sign in first.");
-      return;
-    }
+  // ✅ Handle Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setContent([]);
+  };
 
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/brain/share", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ share: true, contentId: id }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Share Link: http://localhost:3000/api/v1/brain/${data.hash}`);
-      } else {
-        alert("Error: " + data.message);
-      }
-    } catch (error) {
-      console.error("Error sharing content:", error);
-      alert("Failed to generate share link.");
-    }
+  // ✅ Handle Share Content (Simulated)
+  const handleShare = (title: string) => {
+    alert(`Shared: ${title}`);
   };
 
   // ✅ Handle Delete Content
-  const handleDeleteContent = async (id: string) => {
-    if (!token) {
-      alert("Please sign in first.");
-      return;
-    }
+  const handleDelete = async (contentId: string) => {
+    if (!token) return;
 
     try {
       const response = await fetch("http://localhost:3000/api/v1/content", {
@@ -142,26 +121,18 @@ const App = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ contentId: id }),
+        body: JSON.stringify({ contentId }),
       });
 
       if (response.ok) {
         alert("Content deleted successfully!");
-        fetchContent(selectedCategory || "tweets"); // Refresh content
+        fetchContent(selectedCategory || "tweets");
       } else {
         alert("Failed to delete content.");
       }
     } catch (error) {
       console.error("Error deleting content:", error);
-      alert("Error deleting content.");
     }
-  };
-
-  // ✅ Handle Logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setContent([]);
   };
 
   return (
@@ -193,16 +164,15 @@ const App = () => {
 
         {/* Display Content as Cards */}
         <Row>
-          {content.map((item) => (
-            <Col key={item._id} md={4} className="mb-4">
+          {content.map((item, index) => (
+            <Col key={index} md={4} className="mb-4 d-flex">
               <ContentCard
-                id={item._id}
+                type={item.type}
                 title={item.title}
                 link={item.link}
-                type={item.type}
-                tags={item.tags}
-                onShare={handleShareContent}
-                onDelete={handleDeleteContent}
+                tags={item.tags || []}
+                onShare={() => handleShare(item.title)}
+                onDelete={() => handleDelete(item._id)}
               />
             </Col>
           ))}
