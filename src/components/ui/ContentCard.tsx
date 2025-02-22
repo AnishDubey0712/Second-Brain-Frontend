@@ -1,50 +1,48 @@
 import React from "react";
-import { Card, Badge } from "react-bootstrap";
-import { FaShareAlt, FaTrash } from "react-icons/fa";
+import { FaShare, FaTrash } from "react-icons/fa";
 
 interface ContentCardProps {
-  id: string;  // ✅ Required for deleting content
+  type: string;
   title: string;
   link: string;
-  type: string;
-  tags?: string[];
-  onShare: (id: string) => void;
-  onDelete: (id: string) => void;
+  tags: string[];
+  onShare: () => void;
+  onDelete: () => void;
 }
 
-const ContentCard: React.FC<ContentCardProps> = ({ id, title, link, type, tags = [], onShare, onDelete }) => {
+const ContentCard: React.FC<ContentCardProps> = ({ type, title, link, tags, onShare, onDelete }) => {
   return (
-    <Card className="shadow-sm position-relative">
-      <Card.Body>
-        {/* ✅ Content Type on top */}
-        <Badge bg="primary" className="position-absolute top-0 start-0 m-2">
-          {type.charAt(0).toUpperCase() + type.slice(1)}
-        </Badge>
+    <div className="content-card">
+      {/* Type of Content */}
+      <h4 className="content-type">{type.toUpperCase()}</h4>
 
-        {/* ✅ Share & Delete Icons (top-right) */}
-        <div className="position-absolute top-0 end-0 m-2">
-          <FaShareAlt className="text-success me-3" style={{ cursor: "pointer" }} onClick={() => onShare(id)} />
-          <FaTrash className="text-danger" style={{ cursor: "pointer" }} onClick={() => onDelete(id)} />
-        </div>
+      {/* Title */}
+      <h5 className="content-title">{title}</h5>
 
-        {/* ✅ Title */}
-        <Card.Title className="mt-3">{title}</Card.Title>
+      {/* Link */}
+      <a href={link} target="_blank" rel="noopener noreferrer" className="content-link">
+        {link}
+      </a>
 
-        {/* ✅ Link */}
-        <Card.Text>
-          <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
-        </Card.Text>
+      {/* Tags */}
+      <div className="content-tags">
+        {tags.map((tag, index) => (
+          <span key={index} className="tag">
+            #{tag}
+          </span>
+        ))}
+      </div>
 
-        {/* ✅ Display Tags */}
-        {tags.length > 0 && (
-          <div className="mt-2">
-            {tags.map((tag, index) => (
-              <Badge key={index} bg="secondary" className="me-1">#{tag}</Badge>
-            ))}
-          </div>
-        )}
-      </Card.Body>
-    </Card>
+      {/* Buttons */}
+      <div className="content-actions">
+        <button className="btn btn-blue" onClick={onShare}>
+          <FaShare />
+        </button>
+        <button className="btn btn-blue" onClick={onDelete}>
+          <FaTrash />
+        </button>
+      </div>
+    </div>
   );
 };
 
