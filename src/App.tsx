@@ -101,9 +101,9 @@ const App = () => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ share: true, contentId }),
       });
-
+  
       const data = await response.json();
-      if (response.ok) {
+      if (response.ok && data.hash) {
         setShareLink(`http://localhost:5173/shared/${data.hash}`);
         setShowShareModal(true);
       } else {
@@ -114,6 +114,7 @@ const App = () => {
       alert("Failed to generate share link.");
     }
   };
+  
 
   const handleDeleteContent = async (contentId: string) => {
     try {
