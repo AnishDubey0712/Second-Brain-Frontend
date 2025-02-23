@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ContentCard from "./ContentCard";
+import ContentCard from "./ui/ContentCard";
 import { Container, Row, Col } from "react-bootstrap";
 
 const SharedContentPage: React.FC = () => {

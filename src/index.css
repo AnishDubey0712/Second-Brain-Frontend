@@ -49,72 +49,66 @@
   }
   .content-card {
     background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    width: 100%; 
-    min-height: 250px;  /* ✅ Ensures all cards are same height */
-    max-height: 250px;  /* ✅ Prevents overly large cards */
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    min-height: 220px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;  /* ✅ Ensures equal spacing */
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
+    justify-content: space-between;
   }
   
-  .content-card:hover {
-    transform: translateY(-5px);
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .content-type {
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: bold;
-    color: #5D3FD3;
-    text-transform: uppercase;
+    color: #6c757d;
+  }
+  
+  .card-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .share-btn,
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .share-btn {
+    color: #007bff; /* Blue color */
+  }
+  
+  .delete-btn {
+    color: #dc3545; /* Red color */
   }
   
   .content-title {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: bold;
   }
   
-  .content-link {
-    font-size: 0.9rem;
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .content-tags {
+  .tags {
     margin-top: 10px;
   }
   
   .tag {
-    background: #e0e0e0;
-    color: #333;
-    padding: 5px 10px;
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 4px 10px;
     border-radius: 5px;
-    font-size: 0.8rem;
+    font-size: 12px;
     margin-right: 5px;
-  }
-  
-  .content-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-  }
-  
-  /* ✅ Buttons Updated to Blue */
-  .btn-blue {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-  }
-  
-  .btn-blue:hover {
-    background: #0056b3;
+    color: #333;
   }
   

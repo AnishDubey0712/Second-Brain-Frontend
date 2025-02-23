@@ -7,7 +7,7 @@ import ContentCard from "./components/ui/ContentCard";
 import AuthModal from "./components/ui/AuthModal";
 import AddContentModal from "./components/ui/AddContentModal";
 import ShareModal from "./components/ui/ShareModal";
-import SharedContentPage from "./components/ui/SharedContentPage";
+import SharedContentPage from "./components/SharedContentPage";
 
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -94,12 +94,12 @@ const App = () => {
     }
   };
 
-  const handleShareContent = async () => {
+  const handleShareContent = async (contentId: string) => {
     try {
       const response = await fetch("http://localhost:3000/api/v1/brain/share", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ share: true }),
+        body: JSON.stringify({ share: true, contentId }),
       });
 
       const data = await response.json();
@@ -162,44 +162,14 @@ const App = () => {
                   <Col className="text-end">
                     {token ? (
                       <>
-                        <Button
-                          variant="share"
-                          size="md"
-                          text="Share Brain"
-                          onClick={handleShareContent}
-                          className="me-2"
-                        />
-                        <Button
-                          variant="add"
-                          size="md"
-                          text="Add Content"
-                          onClick={() => setShowAddContentModal(true)}
-                        />
-                        <button className="btn btn-danger ms-3" onClick={handleLogout}>
-                          Logout
-                        </button>
+                        <Button variant="share" size="md" text="Share Brain" onClick={() => handleShareContent("")} className="me-2" />
+                        <Button variant="add" size="md" text="Add Content" onClick={() => setShowAddContentModal(true)} />
+                        <button className="btn btn-danger ms-3" onClick={handleLogout}>Logout</button>
                       </>
                     ) : (
                       <>
-                        <Button
-                          variant="share"
-                          size="md"
-                          text="Sign In"
-                          onClick={() => {
-                            setAuthMode("signin");
-                            setShowAuthModal(true);
-                          }}
-                          className="me-2"
-                        />
-                        <Button
-                          variant="add"
-                          size="md"
-                          text="Sign Up"
-                          onClick={() => {
-                            setAuthMode("signup");
-                            setShowAuthModal(true);
-                          }}
-                        />
+                        <Button variant="share" size="md" text="Sign In" onClick={() => { setAuthMode("signin"); setShowAuthModal(true); }} className="me-2" />
+                        <Button variant="add" size="md" text="Sign Up" onClick={() => { setAuthMode("signup"); setShowAuthModal(true); }} />
                       </>
                     )}
                   </Col>
@@ -214,28 +184,15 @@ const App = () => {
                         type={item.type}
                         tags={item.tags}
                         onDelete={() => handleDeleteContent(item._id)}
+                        onShare={() => handleShareContent(item._id)}
                       />
                     </Col>
                   ))}
                 </Row>
               </Container>
 
-              {showAuthModal && (
-                <AuthModal
-                  authMode={authMode}
-                  handleAuth={handleAuth}
-                  onClose={() => setShowAuthModal(false)}
-                />
-              )}
-
-              {showAddContentModal && (
-                <AddContentModal
-                  show={showAddContentModal}
-                  onClose={() => setShowAddContentModal(false)}
-                  onAddContent={handleAddContent}
-                />
-              )}
-
+              {showAuthModal && <AuthModal authMode={authMode} handleAuth={handleAuth} onClose={() => setShowAuthModal(false)} />}
+              {showAddContentModal && <AddContentModal show={showAddContentModal} onClose={() => setShowAddContentModal(false)} onAddContent={handleAddContent} />}
               {showShareModal && <ShareModal shareLink={shareLink} onClose={() => setShowShareModal(false)} />}
             </Container>
           }
