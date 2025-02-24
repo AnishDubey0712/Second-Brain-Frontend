@@ -31,23 +31,6 @@ body {
   transition: background 0.2s ease-in-out;
 }
 
-.sidebar-items {
-  font-family: 'Montserrat', sans-serif;
-  width: 100%;
-  text-align: left;
-  padding: 14px;
-  font-size: 25px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: none;
-  background: none;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-}
-
 .sidebar-item:hover {
   background-color: #4a2db5;
   border-radius: 6px;
@@ -77,20 +60,27 @@ body {
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 🔹 Content Type (Top of Card) */
-.content-type {
-  font-size: 14px;
-  font-weight: bold;
-  color: #6c757d;
-  text-transform: uppercase;
+/* 📌 Header Section (Title + Buttons Aligned in Same Line) */
+.card-header {
+  display: flex;
+  align-items: center; /* ✅ Ensures everything stays in the same line */
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-/* 🛠️ Action Buttons */
+/* ✏️ Content Title (No Changes) */
+.content-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  flex-grow: 1; /* ✅ Ensures it takes available space */
+}
+
+/* 🔹 Buttons (Share & Delete) Aligned with Title */
 .card-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 10px;
 }
 
 /* 🔗 Share & Delete Buttons */
@@ -101,6 +91,9 @@ body {
   cursor: pointer;
   font-size: 18px;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .share-btn {
@@ -111,11 +104,12 @@ body {
   color: #dc3545;
 }
 
-/* ✏️ Content Title */
-.content-title {
-  font-size: 18px;
+/* 🔹 Content Type (Top of Card) */
+.content-type {
+  font-size: 14px;
   font-weight: bold;
-  color: #333;
+  color: #6c757d;
+  text-transform: uppercase;
 }
 
 /* 🏷️ Tags Styling */
@@ -165,7 +159,7 @@ body {
   background: #f8f9fa;
   padding: 10px;
   border-radius: 5px;
-  word-break: break-all;
+  word-break: break-word;
   text-align: center;
   color: #007bff;
   border: 1px solid #007bff;
@@ -174,7 +168,7 @@ body {
 /* 🔘 Share Modal Buttons */
 .modal-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
