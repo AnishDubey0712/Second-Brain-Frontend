@@ -10,7 +10,7 @@ import ShareModal from "./components/ui/ShareModal";
 import SharedContentPage from "./components/SharedContentPage";
 
 const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all"); // Default to 'all'
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAddContentModal, setShowAddContentModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -19,15 +19,17 @@ const App = () => {
   const [content, setContent] = useState([]);
   const [shareLink, setShareLink] = useState<string | null>(null);
 
+  // 🔥 Fetch content when category changes or after login
   useEffect(() => {
-    if (token && selectedCategory) {
+    if (token) {
       fetchContent(selectedCategory);
     }
   }, [selectedCategory, token]);
 
-  const fetchContent = async (type: string) => {
+  // ✅ Fetch content based on category
+  const fetchContent = async (category: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/content?type=${type}`, {
+      const response = await fetch(`http://localhost:3000/api/v1/content?type=${category}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -57,6 +59,7 @@ const App = () => {
         if (authMode === "signin") {
           localStorage.setItem("token", data.token);
           setToken(data.token);
+          fetchContent(selectedCategory); // ✅ Fetch content after login
         }
         setShowAuthModal(false);
       } else {
@@ -67,6 +70,12 @@ const App = () => {
     }
   };
 
+  // ✅ Handle Sidebar Category Click
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  // ✅ Handle Content Addition
   const handleAddContent = async (title: string, link: string, type: string, tags: string[]) => {
     if (!token) {
       alert("Please sign in first.");
@@ -84,7 +93,7 @@ const App = () => {
       if (response.ok) {
         alert("Content added successfully!");
         setShowAddContentModal(false);
-        fetchContent(selectedCategory || "tweets");
+        fetchContent(selectedCategory); // ✅ Fetch updated content
       } else {
         alert("Error: " + data.message);
       }
@@ -94,49 +103,7 @@ const App = () => {
     }
   };
 
-  const handleShareContent = async (contentId: string) => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/brain/share", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ share: true, contentId }),
-      });
-  
-      const data = await response.json();
-      if (response.ok && data.hash) {
-        setShareLink(`http://localhost:5173/shared/${data.hash}`);
-        setShowShareModal(true);
-      } else {
-        alert("Error: " + data.message);
-      }
-    } catch (error) {
-      console.error("Error generating share link:", error);
-      alert("Failed to generate share link.");
-    }
-  };
-  
-
-  const handleDeleteContent = async (contentId: string) => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/content", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ contentId }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Content deleted successfully!");
-        fetchContent(selectedCategory || "tweets");
-      } else {
-        alert("Error: " + data.message);
-      }
-    } catch (error) {
-      console.error("Error deleting content:", error);
-      alert("Failed to delete content.");
-    }
-  };
-
+  // ✅ Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     setToken(null);
@@ -151,19 +118,19 @@ const App = () => {
           path="/"
           element={
             <Container fluid className="d-flex p-0">
-              <Sidebar onCategorySelect={setSelectedCategory} />
+              {/* ✅ Sidebar with Category Selection */}
+              <Sidebar onCategorySelect={handleCategorySelect} />
 
               <Container className="p-4">
                 <Row className="justify-content-between align-items-center mb-4">
                   <Col>
-                    <h2 className="fw-bold" style={{ fontFamily: "Poppins, sans-serif" }}>
-                      All Notes
+                    <h2 className="fw-bold all-notes-title">
+                      {selectedCategory === "all" ? "All Notes" : `${selectedCategory} Notes`}
                     </h2>
                   </Col>
                   <Col className="text-end">
                     {token ? (
                       <>
-                        <Button variant="share" size="md" text="Share Brain" onClick={() => handleShareContent("")} className="me-2" />
                         <Button variant="add" size="md" text="Add Content" onClick={() => setShowAddContentModal(true)} />
                         <button className="btn btn-danger ms-3" onClick={handleLogout}>Logout</button>
                       </>
@@ -176,25 +143,22 @@ const App = () => {
                   </Col>
                 </Row>
 
+                {/* ✅ Display Content Cards */}
                 <Row>
-                  {content.map((item, index) => (
-                    <Col key={index} md={4} className="mb-4">
-                      <ContentCard
-                        title={item.title}
-                        link={item.link}
-                        type={item.type}
-                        tags={item.tags}
-                        onDelete={() => handleDeleteContent(item._id)}
-                        onShare={() => handleShareContent(item._id)}
-                      />
-                    </Col>
-                  ))}
+                  {content.length > 0 ? (
+                    content.map((item, index) => (
+                      <Col key={index} md={4} className="mb-4">
+                        <ContentCard title={item.title} link={item.link} type={item.type} tags={item.tags} />
+                      </Col>
+                    ))
+                  ) : (
+                    <p className="text-center mt-4">No content available for {selectedCategory}.</p>
+                  )}
                 </Row>
               </Container>
 
               {showAuthModal && <AuthModal authMode={authMode} handleAuth={handleAuth} onClose={() => setShowAuthModal(false)} />}
               {showAddContentModal && <AddContentModal show={showAddContentModal} onClose={() => setShowAddContentModal(false)} onAddContent={handleAddContent} />}
-              {showShareModal && <ShareModal shareLink={shareLink} onClose={() => setShowShareModal(false)} />}
             </Container>
           }
         />
