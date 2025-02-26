@@ -6,30 +6,31 @@ import Button from "./components/ui/Button";
 import ContentCard from "./components/ui/ContentCard";
 import AuthModal from "./components/ui/AuthModal";
 import AddContentModal from "./components/ui/AddContentModal";
-import ShareModal from "./components/ui/ShareModal";
 import SharedContentPage from "./components/SharedContentPage";
 
 const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all"); // Default to 'all'
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAddContentModal, setShowAddContentModal] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [content, setContent] = useState([]);
-  const [shareLink, setShareLink] = useState<string | null>(null);
 
-  // 🔥 Fetch content when category changes or after login
+  // 🔥 Fetch all content initially
   useEffect(() => {
     if (token) {
       fetchContent(selectedCategory);
     }
   }, [selectedCategory, token]);
 
-  // ✅ Fetch content based on category
-  const fetchContent = async (category: string) => {
+  // ✅ Fetch content (All or Specific Category)
+  const fetchContent = async (category: string | null) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/content?type=${category}`, {
+      const url = category
+        ? `http://localhost:3000/api/v1/content?type=${category}`
+        : `http://localhost:3000/api/v1/content`; // ✅ Fetch all content if no category is selected
+
+      const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -59,7 +60,7 @@ const App = () => {
         if (authMode === "signin") {
           localStorage.setItem("token", data.token);
           setToken(data.token);
-          fetchContent(selectedCategory); // ✅ Fetch content after login
+          fetchContent(null); // ✅ Fetch all content after login
         }
         setShowAuthModal(false);
       } else {
@@ -70,9 +71,9 @@ const App = () => {
     }
   };
 
-  // ✅ Handle Sidebar Category Click
+  // ✅ Handle Sidebar Click
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category === "all" ? null : category); // ✅ Reset to all content if "All Notes" is selected
   };
 
   // ✅ Handle Content Addition
@@ -118,14 +119,14 @@ const App = () => {
           path="/"
           element={
             <Container fluid className="d-flex p-0">
-              {/* ✅ Sidebar with Category Selection */}
+              {/* ✅ Sidebar for Selecting Categories */}
               <Sidebar onCategorySelect={handleCategorySelect} />
 
               <Container className="p-4">
                 <Row className="justify-content-between align-items-center mb-4">
                   <Col>
                     <h2 className="fw-bold all-notes-title">
-                      {selectedCategory === "all" ? "All Notes" : `${selectedCategory} Notes`}
+                      {selectedCategory ? `${selectedCategory} Notes` : "All Notes"}
                     </h2>
                   </Col>
                   <Col className="text-end">
@@ -143,7 +144,7 @@ const App = () => {
                   </Col>
                 </Row>
 
-                {/* ✅ Display Content Cards */}
+                {/* ✅ Show All Content by Default, Filter on Sidebar Click */}
                 <Row>
                   {content.length > 0 ? (
                     content.map((item, index) => (
@@ -152,7 +153,7 @@ const App = () => {
                       </Col>
                     ))
                   ) : (
-                    <p className="text-center mt-4">No content available for {selectedCategory}.</p>
+                    <p className="text-center mt-4">No content available.</p>
                   )}
                 </Row>
               </Container>
