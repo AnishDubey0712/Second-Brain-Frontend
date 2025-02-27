@@ -94,7 +94,7 @@ const App = () => {
       if (response.ok) {
         alert("Content added successfully!");
         setShowAddContentModal(false);
-        fetchContent(selectedCategory); // ✅ Fetch updated content
+        fetchContent(selectedCategory); // Fetch updated content
       } else {
         alert("Error: " + data.message);
       }
@@ -119,7 +119,7 @@ const App = () => {
           path="/"
           element={
             <Container fluid className="d-flex p-0">
-              {/* ✅ Sidebar for Selecting Categories */}
+              {/*  Sidebar for Selecting Categories */}
               <Sidebar onCategorySelect={handleCategorySelect} />
 
               <Container className="p-4">
