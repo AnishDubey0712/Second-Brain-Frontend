@@ -144,7 +144,7 @@ const App = () => {
                   </Col>
                 </Row>
 
-                {/* ✅ Show All Content by Default, Filter on Sidebar Click */}
+                {/* Show All Content by Default, Filter on Sidebar Click */}
                 <Row>
                   {content.length > 0 ? (
                     content.map((item, index) => (
