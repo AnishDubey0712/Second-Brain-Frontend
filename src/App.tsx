@@ -76,7 +76,8 @@ const App = () => {
     setSelectedCategory(category === "all" ? null : category); // ✅ Reset to all content if "All Notes" is selected
   };
 
-  // ✅ Handle Content Addition
+  // 
+  // Handle Content Addition
   const handleAddContent = async (title: string, link: string, type: string, tags: string[]) => {
     if (!token) {
       alert("Please sign in first.");
